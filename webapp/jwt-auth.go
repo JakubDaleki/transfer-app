@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/golang-jwt/jwt/v4"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 var sampleSecretKey = []byte("SecretYouShouldHide")
@@ -32,7 +33,7 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expectedPassword := users[creds.Username]
+	expectedPassword := connector.GetPassword(creds.Username)
 
 	if expectedPassword != creds.Password {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -75,12 +76,12 @@ func authMiddleware(next func(http.ResponseWriter, *http.Request, string)) func(
 		}
 
 		claims := new(Claims)
-		_, err := jwt.ParseWithClaims(bearer, *claims, func(token *jwt.Token) (interface{}, error) { return sampleSecretKey, nil })
-		if err != nil {
+		_, err := jwt.ParseWithClaims(bearer, claims, func(token *jwt.Token) (interface{}, error) { return sampleSecretKey, nil })
+		if err == nil {
 			next(w, r, claims.Username)
 			return
 		}
 
-		w.Write([]byte(fmt.Sprintf("{\"access_token\": \"%s\"}", bearer)))
+		w.Write([]byte(fmt.Sprintf("{\"error\": \"%v\"}", err)))
 	}
 }

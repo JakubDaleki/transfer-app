@@ -7,20 +7,12 @@ import (
 	"net/http"
 )
 
-// this should be a database instead
-var users = map[string]string{
-	"user1": "password1",
-	"user2": "password2",
-}
-
-var userAmounts = map[string]int{
-	"user1": 0,
-	"user2": 0,
-}
+var connector = NewConnector()
 
 func main() {
 	http.HandleFunc("/balance", authMiddleware(balanceHandler))
 	http.HandleFunc("/authentication", authHandler)
+	http.HandleFunc("/register", regHandler)
 	http.HandleFunc("/transfer", authMiddleware(transferHandler))
 	// start the server on port 8000
 	log.Fatal(http.ListenAndServe(":8000", nil))
@@ -28,8 +20,15 @@ func main() {
 }
 
 func balanceHandler(w http.ResponseWriter, r *http.Request, username string) {
-	balance := userAmounts[username]
+	balance := connector.userAmounts[username]
 	w.Write([]byte(fmt.Sprintf("{\"balance\": \"%v\"}", balance)))
+}
+
+func regHandler(w http.ResponseWriter, r *http.Request) {
+	cred := new(Credentials)
+	json.NewDecoder(r.Body).Decode(cred)
+	connector.AddNewUser(cred.Username, cred.Password)
+	w.Write([]byte(fmt.Sprintf("{\"message\": \"ok\"}")))
 }
 
 type Transfer struct {
@@ -40,7 +39,11 @@ type Transfer struct {
 func transferHandler(w http.ResponseWriter, r *http.Request, username string) {
 	transfer := new(Transfer)
 	json.NewDecoder(r.Body).Decode(transfer)
-	userAmounts[username] -= transfer.Amount
-	userAmounts[transfer.To] -= transfer.Amount
-	w.Write([]byte(fmt.Sprintf("{\"balance\": \"%v\"}", userAmounts[username])))
+	err := connector.TransferTx(username, transfer.To, transfer.Amount)
+	if err != nil {
+		w.Write([]byte(fmt.Sprintf("{\"error\": \"%v\"}", err)))
+		return
+	}
+
+	w.Write([]byte(fmt.Sprintf("{\"message\": \"Transfered %v from %v to %v\"}", transfer.Amount, username, transfer.To)))
 }
