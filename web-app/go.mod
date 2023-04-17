@@ -1,4 +1,4 @@
-module github.com/JakubDaleki/transfer-app
+module github.com/JakubDaleki/transfer-app/webapp
 
 go 1.19
 
