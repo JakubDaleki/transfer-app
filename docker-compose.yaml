@@ -1,0 +1,12 @@
+version: '1'
+services:
+  web:
+    # Path to dockerfile.
+    # '.' represents the current directory in which
+    # docker-compose.yml is present.
+    build: web-app
+
+    # Mapping of container port to host
+    
+    ports:
+      - "8000:8000"
