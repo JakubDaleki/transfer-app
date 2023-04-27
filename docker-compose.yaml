@@ -6,13 +6,11 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    logging:
-      driver: "none"
+      ZOOKEEPER_TOOLS_LOG4J_LOGLEVEL: ERROR
+      ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: ERROR
 
   broker:
     image: confluentinc/cp-kafka:7.3.2
-    logging:
-      driver: "none"
     container_name: broker
     ports:
     # To learn about configuring Kafka for access across networks see
@@ -28,22 +26,15 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TOOLS_LOG4J_LOGLEVEL: ERROR
+      KAFKA_LOG4J_ROOT_LOGLEVEL: ERROR
+      KAFKA_LOG4J_LOGGERS: kafka.controller=ERROR,kafka.request.logger=ERROR
   web:
-    # Path to dockerfile.
-    # '.' represents the current directory in which
-    # docker-compose.yml is present.
     build: web-app
-
-    # Mapping of container port to host
-    
     ports:
       - "8000:8000"
     depends_on:
       - broker
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 15s
-        max_attempts: 3
+
   # command-handler:
   #  build: command-handler

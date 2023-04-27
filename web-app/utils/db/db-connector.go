@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"errors"
@@ -6,9 +6,10 @@ import (
 )
 
 // this should be a database instead
+// but for now everything is stored in memory
 type Connector struct {
-	users                    map[string]string
-	userAmounts              map[string]int
+	Users                    map[string]string
+	UserAmounts              map[string]int
 	usersMutex, balanceMutex sync.Mutex
 }
 
@@ -16,34 +17,34 @@ func (conn *Connector) GetPassword(username string) string {
 	// what if user doesnt exist
 	conn.usersMutex.Lock()
 	defer conn.usersMutex.Unlock()
-	return conn.users[username]
+	return conn.Users[username]
 }
 
 func (conn *Connector) TransferTx(from, to string, amount int) error {
 	// what if user doesnt exist
 	conn.balanceMutex.Lock()
 	defer conn.balanceMutex.Unlock()
-	if conn.userAmounts[from] < amount {
+	if conn.UserAmounts[from] < amount {
 		return errors.New("Not enough funds on your account")
 	}
-	conn.userAmounts[from] -= amount
-	conn.userAmounts[to] += amount
+	conn.UserAmounts[from] -= amount
+	conn.UserAmounts[to] += amount
 	return nil
 }
 
 func (conn *Connector) AddNewUser(username, password string) {
 	conn.usersMutex.Lock()
-	conn.users[username] = password
+	conn.Users[username] = password
 	conn.usersMutex.Unlock()
 
 	conn.balanceMutex.Lock()
-	conn.userAmounts[username] = 100
+	conn.UserAmounts[username] = 100
 	conn.balanceMutex.Unlock()
 }
 
 func NewConnector() *Connector {
 	conn := new(Connector)
-	conn.users = make(map[string]string)
-	conn.userAmounts = make(map[string]int)
+	conn.Users = make(map[string]string)
+	conn.UserAmounts = make(map[string]int)
 	return conn
 }
