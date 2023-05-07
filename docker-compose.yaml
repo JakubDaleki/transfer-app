@@ -35,6 +35,16 @@ services:
       - "8000:8000"
     depends_on:
       - broker
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password123
 
-  # command-handler:
-  #  build: command-handler
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  command-handler:
+    build: command-handler

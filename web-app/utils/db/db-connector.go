@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	//"github.com/lib/pq"
 	"sync"
 )
 
