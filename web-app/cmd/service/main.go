@@ -1,13 +1,17 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/JakubDaleki/transfer-app/webapp/api/handlers"
 	"github.com/JakubDaleki/transfer-app/webapp/api/middleware"
 	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
+	"github.com/jackc/pgx/v5"
 	"github.com/segmentio/kafka-go"
 )
 
@@ -27,6 +31,22 @@ func main() {
 	}
 	// we can close it as we are going to use high-level Writer API
 	conn.Close()
+
+	urlExample := "postgres://postgres:password123@db:5432/postgres"
+	conn2, err := pgx.Connect(context.Background(), urlExample)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	var name string
+	var weight int64
+	_, err = conn2.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS users (id uuid NOT NULL, username text UNIQUE NOT NULL, password text NOT NULL);")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(name, weight)
 
 	// round-robin writer
 	kafkaW := &kafka.Writer{
