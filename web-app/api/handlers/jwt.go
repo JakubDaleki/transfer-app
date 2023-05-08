@@ -3,12 +3,13 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/JakubDaleki/transfer-app/webapp/api/resource/auth"
-	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
-	"github.com/golang-jwt/jwt/v4"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/JakubDaleki/transfer-app/webapp/api/resource/auth"
+	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func AuthHandler(w http.ResponseWriter, r *http.Request, connector *db.Connector) {
@@ -23,6 +24,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request, connector *db.Connector
 
 	if expectedPassword != creds.Password {
 		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte(fmt.Sprintf("{\"error\": \"Wrong password or user does not exist.\"}")))
 		return
 	}
 

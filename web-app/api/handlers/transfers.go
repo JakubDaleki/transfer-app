@@ -13,7 +13,7 @@ import (
 )
 
 func BalanceHandler(w http.ResponseWriter, r *http.Request, username string, connector *db.Connector) {
-	balance := connector.UserAmounts[username]
+	balance := connector.GetBalance(username)
 	w.Write([]byte(fmt.Sprintf("{\"balance\": \"%v\"}", balance)))
 }
 
@@ -28,6 +28,7 @@ func TransferHandler(w http.ResponseWriter, r *http.Request, username string, ka
 	if r.Method == "POST" {
 		transfer := new(transfers.Transfer)
 		json.NewDecoder(r.Body).Decode(transfer)
+		transfer.From = username
 		txByteMsg, err := json.Marshal(*transfer)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)

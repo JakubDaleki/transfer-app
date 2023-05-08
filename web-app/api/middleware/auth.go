@@ -2,15 +2,17 @@ package middleware
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/JakubDaleki/transfer-app/webapp/api/resource/auth"
 	"github.com/golang-jwt/jwt/v4"
-	"net/http"
 )
 
 func AuthMiddleware(next func(http.ResponseWriter, *http.Request, string)) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		bearer := r.Header.Get("bearer")
 		if bearer == "" {
+			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(fmt.Sprintf("{\"error\": \"%s\"}", "Bearer Token Not Provided")))
 			return
 		}
@@ -22,6 +24,7 @@ func AuthMiddleware(next func(http.ResponseWriter, *http.Request, string)) func(
 			return
 		}
 
+		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(fmt.Sprintf("{\"error\": \"%v\"}", err)))
 	}
 }
