@@ -2,3 +2,5 @@ The purpose of this application is to build a system that could be used for effi
 
 
 ![System architecture](https://github.com/JakubDaleki/transfer-app/blob/main/arch-diagram.png?raw=true)
+
+This is not a final architecture as it's still evolving. Another consideration is to use key-value in memory db to store balances. Each time this service goes down it would have to process kafka logs to retrieve current balance for each user. It can be costly but in this scenario I wouldn't expect KV store to be down very often and it would benefit in high performance thanks in-memory features. In addition, kafka allows to chain operations and perform account balance addition after subtraction (asynchroniously) and because of that standard, heavy db with distributed transaction features is not needed.
