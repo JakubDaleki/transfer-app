@@ -17,8 +17,10 @@ type Transfer struct {
 	Amount int    `json:"amount"`
 }
 
-func updateBalance(pool *pgxpool.Pool, username string) error {
-	_, err := pool.Exec(context.Background(), "update balance set balance=$1 where id=$2", description, itemNum)
+func updateBalance(pool *pgxpool.Pool, username string, amount int) error {
+	tx, _ := pool.Begin(context.Background())
+	tx.Exec(context.Background(), "update balance set balance=balance+$1 where username=$2", amount, username)
+	err := tx.Commit(context.Background())
 	return err
 }
 
@@ -35,8 +37,15 @@ func transferProcessing(pool *pgxpool.Pool) {
 			break
 		}
 		transfer := new(Transfer)
-		json.NewDecoder(string(m.Value)).Decode(transfer)
-		fmt.Printf("message at topic/partition/offset %v/%v/%v: %s = %s\n", m.Topic, m.Partition, m.Offset, string(m.Key), string(m.Value))
+		json.Unmarshal(m.Value, transfer)
+		err = updateBalance(pool, transfer.From, -transfer.Amount)
+		if err != nil {
+			fmt.Printf("Failed transfer of %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)
+			continue
+		}
+
+		err = updateBalance(pool, transfer.To, transfer.Amount)
+		fmt.Printf("transfered %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)
 	}
 
 	if err := r.Close(); err != nil {
@@ -46,9 +55,9 @@ func transferProcessing(pool *pgxpool.Pool) {
 
 func main() {
 	url := "postgres://postgres:password123@db:5432/postgres"
-	conn, err := pgxpool.New(context.Background(), url)
+	pool, err := pgxpool.New(context.Background(), url)
 	if err != nil {
 		return
 	}
-
+	transferProcessing(pool)
 }

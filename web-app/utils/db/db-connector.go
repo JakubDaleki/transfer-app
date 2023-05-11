@@ -9,7 +9,7 @@ import (
 // this should be a database instead
 // but for now everything is stored in memory
 type Connector struct {
-	pgConn *pgx.Conn
+	pgConn *pgxpool.Pool
 }
 
 func (conn *Connector) GetBalance(username string) int {
