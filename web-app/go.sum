@@ -1,3 +1,5 @@
+github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230516102607-152713c33501 h1:ytfokMVuxpVYtVgvWZPawkAOQJni4J2FwA10q8y3hhQ=
+github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230516102607-152713c33501/go.mod h1:plCB3Jfx8HUW9iDh8kOrjk4rU2SViPmZobNC31dfLXw=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

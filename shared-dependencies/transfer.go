@@ -5,3 +5,8 @@ type Transfer struct {
 	To     string `json:"to"`
 	Amount int    `json:"amount"`
 }
+
+type Balance struct {
+	Username string `json:"username"`
+	Balance  int    `json:"balance"`
+}

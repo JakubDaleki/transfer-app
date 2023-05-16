@@ -3,6 +3,7 @@ module github.com/JakubDaleki/transfer-app/webapp
 go 1.19
 
 require (
+	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230516102607-152713c33501
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/jackc/pgx/v5 v5.3.1
 	github.com/segmentio/kafka-go v0.4.39

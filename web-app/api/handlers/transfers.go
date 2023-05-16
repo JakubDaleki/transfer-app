@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/JakubDaleki/transfer-app/shared-dependencies/shared"
+	"github.com/JakubDaleki/transfer-app/shared-dependencies"
 	"github.com/JakubDaleki/transfer-app/webapp/api/resource/auth"
 	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
 	"github.com/segmentio/kafka-go"

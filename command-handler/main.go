@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/JakubDaleki/transfer-app/shared-dependencies/shared"
+	"github.com/JakubDaleki/transfer-app/shared-dependencies"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/segmentio/kafka-go"
 )
