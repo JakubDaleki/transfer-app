@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/JakubDaleki/transfer-app/shared-dependencies/shared"
 	"github.com/JakubDaleki/transfer-app/webapp/api/resource/auth"
-	"github.com/JakubDaleki/transfer-app/webapp/api/resource/transfers"
 	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
 	"github.com/segmentio/kafka-go"
 )
@@ -26,7 +26,7 @@ func RegHandler(w http.ResponseWriter, r *http.Request, connector *db.Connector)
 
 func TransferHandler(w http.ResponseWriter, r *http.Request, username string, kafkaW *kafka.Writer) {
 	if r.Method == "POST" {
-		transfer := new(transfers.Transfer)
+		transfer := new(shared.Transfer)
 		json.NewDecoder(r.Body).Decode(transfer)
 		transfer.From = username
 		txByteMsg, err := json.Marshal(*transfer)

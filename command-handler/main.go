@@ -6,16 +6,10 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/JakubDaleki/transfer-app/shared-dependencies/shared"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/segmentio/kafka-go"
 )
-
-// this should be a dependency
-type Transfer struct {
-	From   string `json:"from"`
-	To     string `json:"to"`
-	Amount int    `json:"amount"`
-}
 
 func updateBalance(pool *pgxpool.Pool, username string, amount int) error {
 	tx, _ := pool.Begin(context.Background())
@@ -36,7 +30,7 @@ func transferProcessing(pool *pgxpool.Pool) {
 		if err != nil {
 			break
 		}
-		transfer := new(Transfer)
+		transfer := new(shared.Transfer)
 		json.Unmarshal(m.Value, transfer)
 		err = updateBalance(pool, transfer.From, -transfer.Amount)
 		if err != nil {

@@ -1,4 +1,4 @@
-package transfers
+package shared
 
 type Transfer struct {
 	From   string `json:"from"`
