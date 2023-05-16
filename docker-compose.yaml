@@ -29,12 +29,12 @@ services:
       KAFKA_TOOLS_LOG4J_LOGLEVEL: ERROR
       KAFKA_LOG4J_ROOT_LOGLEVEL: ERROR
       KAFKA_LOG4J_LOGGERS: kafka.controller=ERROR,kafka.request.logger=ERROR
-  web:
-    build: web-app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - broker
+
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
   db:
     image: postgres
     restart: always
@@ -46,5 +46,13 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+  web:
+    build: web-app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - broker
+
   command-handler:
     build: command-handler
