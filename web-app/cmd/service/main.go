@@ -5,8 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/JakubDaleki/transfer-app/webapp/api/handlers"
-	"github.com/JakubDaleki/transfer-app/webapp/api/middleware"
+	"github.com/JakubDaleki/transfer-app/webapp/api/router"
 	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
 	"github.com/segmentio/kafka-go"
 )
@@ -35,21 +34,12 @@ func main() {
 		connector, err = db.NewConnector()
 	}
 
-	// use container DI like uber-go/dig instead of manual
-	DIBalanceHandler := func(w http.ResponseWriter, r *http.Request, username string) {
-		handlers.BalanceHandler(w, r, username, connector)
-	}
-	DIAuthHandler := func(w http.ResponseWriter, r *http.Request) { handlers.AuthHandler(w, r, connector) }
-	DIRegHandler := func(w http.ResponseWriter, r *http.Request) { handlers.RegHandler(w, r, connector) }
-	DITransferHandler := func(w http.ResponseWriter, r *http.Request, username string) {
-		handlers.TransferHandler(w, r, username, kafkaW)
+	s := &http.Server{
+		Addr:    ":8000",
+		Handler: router.New(connector, kafkaW),
 	}
 
-	http.HandleFunc("/balance", middleware.AuthMiddleware(DIBalanceHandler))
-	http.HandleFunc("/authentication", DIAuthHandler)
-	http.HandleFunc("/register", DIRegHandler)
-	http.HandleFunc("/transfer", middleware.AuthMiddleware(DITransferHandler))
 	// start the server on port 8000
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	log.Fatal(s.ListenAndServe())
 
 }
