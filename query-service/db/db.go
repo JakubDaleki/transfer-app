@@ -56,8 +56,8 @@ func NewDatabase() (*Database, error) {
 			"balance": &memdb.TableSchema{
 				Name: "balance",
 				Indexes: map[string]*memdb.IndexSchema{
-					"username": &memdb.IndexSchema{
-						Name:    "username",
+					"id": &memdb.IndexSchema{
+						Name:    "id",
 						Unique:  true,
 						Indexer: &memdb.StringFieldIndex{Field: "Username"},
 					},

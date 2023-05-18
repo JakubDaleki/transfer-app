@@ -1,9 +1,9 @@
-module github.com/JakubDaleki/transfer-app/webapp
+module github.com/JakubDaleki/transfer-app/query-service
 
 go 1.19
 
-
 replace github.com/JakubDaleki/transfer-app/shared-dependencies => ../shared-dependencies
+
 require (
 	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230516102607-152713c33501
 	github.com/hashicorp/go-memdb v1.3.4

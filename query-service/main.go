@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	database, err := db.NewDatabase()
+	_, err := db.NewDatabase()
 	if err != nil {
 		panic(err)
 	}
