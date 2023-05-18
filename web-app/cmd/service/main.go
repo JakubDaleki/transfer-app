@@ -6,7 +6,7 @@ import (
 
 	"github.com/JakubDaleki/transfer-app/webapp/api/router"
 	"github.com/JakubDaleki/transfer-app/webapp/utils"
-	"github.com/JakubDaleki/transfer-app/webapp/utils/db_utils"
+	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
 	"github.com/segmentio/kafka-go"
 )
 
@@ -17,7 +17,7 @@ func main() {
 		panic(err)
 	}
 
-	connector, err := db_utils.WaitForDb()
+	connector, err := db.WaitForDb()
 
 	if err != nil {
 		panic(err)
