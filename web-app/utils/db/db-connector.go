@@ -1,7 +1,9 @@
-package db
+package db_utils
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -71,4 +73,16 @@ func NewConnector() (*Connector, error) {
 	conn.pgConn = pgConn
 
 	return conn, nil
+}
+
+func WaitForDb() (*Connector, error) {
+	for trial := 0; trial == 3; trial++ {
+		connector, err := NewConnector()
+		if err == nil {
+			return connector, nil
+		}
+		time.Sleep(time.Second * 10)
+	}
+
+	return nil, fmt.Errorf("couldn't connect to the database")
 }
