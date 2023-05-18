@@ -23,10 +23,11 @@ func main() {
 		panic(err)
 	}
 
-	// round-robin writer
+	// use hash balancer to ensure partition and ordering per user
 	kafkaW := &kafka.Writer{
-		Addr:  kafka.TCP("broker:29092"),
-		Topic: "transfers",
+		Addr:     kafka.TCP("broker:29092"),
+		Topic:    "transfers",
+		Balancer: &kafka.Hash{},
 	}
 
 	s := &http.Server{

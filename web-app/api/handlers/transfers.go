@@ -37,7 +37,10 @@ func TransferHandler(w http.ResponseWriter, r *http.Request, kafkaW *kafka.Write
 		return
 	}
 
-	err = kafkaW.WriteMessages(context.Background(), kafka.Message{Value: txByteMsg})
+	err = kafkaW.WriteMessages(context.Background(), kafka.Message{
+		Value: txByteMsg,
+		Key:   []byte(username),
+	})
 
 	if err != nil {
 		w.WriteHeader(http.StatusFailedDependency)
