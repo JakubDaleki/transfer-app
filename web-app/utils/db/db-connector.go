@@ -60,16 +60,6 @@ func NewConnector() (*Connector, error) {
 		return nil, err
 	}
 
-	_, err = pgConn.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS balance (username text UNIQUE NOT NULL, balance integer NOT NULL);")
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = pgConn.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS transactions (id uuid NOT NULL, status text NOT NULL, from_user text NOT NULL, to_user text NOT NULL, amount integer NOT NULL);")
-	if err != nil {
-		return nil, err
-	}
-
 	conn.pgConn = pgConn
 
 	return conn, nil
@@ -78,6 +68,7 @@ func NewConnector() (*Connector, error) {
 func WaitForDb() (*Connector, error) {
 	for trial := 0; trial == 3; trial++ {
 		connector, err := NewConnector()
+		fmt.Println(err)
 		if err == nil {
 			return connector, nil
 		}
