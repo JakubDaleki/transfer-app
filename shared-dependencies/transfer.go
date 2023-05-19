@@ -1,9 +1,15 @@
 package shared
 
+import (
+	"github.com/google/uuid"
+)
+
 type Transfer struct {
-	From   string `json:"from"`
-	To     string `json:"to"`
-	Amount int    `json:"amount"`
+	Id     uuid.UUID `json:"id"`
+	From   string    `json:"from"`
+	To     string    `json:"to"`
+	Amount int       `json:"amount"`
+	Status string    `json:"status"`
 }
 
 type Balance struct {
