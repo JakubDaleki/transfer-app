@@ -9,6 +9,7 @@ import (
 	"github.com/JakubDaleki/transfer-app/shared-dependencies"
 	"github.com/JakubDaleki/transfer-app/webapp/api/resource/auth"
 	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
+	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
 )
 
@@ -30,6 +31,8 @@ func TransferHandler(w http.ResponseWriter, r *http.Request, kafkaW *kafka.Write
 	json.NewDecoder(r.Body).Decode(transfer)
 	username := r.Context().Value("username").(string)
 	transfer.From = username
+	transfer.Id = uuid.New()
+	transfer.Status = "queued"
 	txByteMsg, err := json.Marshal(*transfer)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -49,6 +52,5 @@ func TransferHandler(w http.ResponseWriter, r *http.Request, kafkaW *kafka.Write
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(fmt.Sprintf("{\"message\": \"Queued transfer of %v from %v to %v\"}", transfer.Amount, username, transfer.To)))
-
+	json.NewEncoder(w).Encode(transfer)
 }
