@@ -66,9 +66,8 @@ func NewConnector() (*Connector, error) {
 }
 
 func WaitForDb() (*Connector, error) {
-	for trial := 0; trial == 3; trial++ {
+	for trial := 0; trial < 3; trial++ {
 		connector, err := NewConnector()
-		fmt.Println(err)
 		if err == nil {
 			return connector, nil
 		}
