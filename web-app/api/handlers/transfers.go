@@ -7,16 +7,17 @@ import (
 	"net/http"
 
 	"github.com/JakubDaleki/transfer-app/shared-dependencies"
+	pb "github.com/JakubDaleki/transfer-app/shared-dependencies/grpc"
 	"github.com/JakubDaleki/transfer-app/webapp/api/resource/auth"
 	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
 	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
 )
 
-func BalanceHandler(w http.ResponseWriter, r *http.Request, connector *db.Connector) {
+func BalanceHandler(w http.ResponseWriter, r *http.Request, client pb.GreeterClient) {
 	username := r.Context().Value("username").(string)
-	balance := connector.GetBalance(username)
-	w.Write([]byte(fmt.Sprintf("{\"balance\": \"%v\"}", balance)))
+	response, _ := client.GetBalance(context.Background(), &pb.BalanceRequest{Username: username})
+	json.NewEncoder(w).Encode(&shared.Balance{Username: username, Balance: response.Balance})
 }
 
 func RegHandler(w http.ResponseWriter, r *http.Request, connector *db.Connector) {

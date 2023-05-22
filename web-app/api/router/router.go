@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 
+	pb "github.com/JakubDaleki/transfer-app/shared-dependencies/grpc"
 	"github.com/JakubDaleki/transfer-app/webapp/api/handlers"
 	"github.com/JakubDaleki/transfer-app/webapp/api/router/middleware"
 	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
@@ -10,7 +11,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func New(connector *db.Connector, kafkaW *kafka.Writer) *chi.Mux {
+func New(connector *db.Connector, kafkaW *kafka.Writer, client pb.GreeterClient) *chi.Mux {
 	r := chi.NewRouter()
 
 	DIAuthHandler := func(w http.ResponseWriter, r *http.Request) { handlers.AuthHandler(w, r, connector) }
@@ -22,7 +23,7 @@ func New(connector *db.Connector, kafkaW *kafka.Writer) *chi.Mux {
 		r.Use(middleware.AuthMiddleware)
 
 		// use container DI like uber-go/dig instead of manual
-		DIBalanceHandler := func(w http.ResponseWriter, r *http.Request) { handlers.BalanceHandler(w, r, connector) }
+		DIBalanceHandler := func(w http.ResponseWriter, r *http.Request) { handlers.BalanceHandler(w, r, client) }
 		DITransferHandler := func(w http.ResponseWriter, r *http.Request) { handlers.TransferHandler(w, r, kafkaW) }
 		r.Method("GET", "/balance", http.HandlerFunc(DIBalanceHandler))
 		r.Method("POST", "/transfer", http.HandlerFunc(DITransferHandler))

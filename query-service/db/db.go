@@ -15,10 +15,11 @@ func (db *Database) GetBalance(username string) *shared.Balance {
 	txn := db.memdb.Txn(false)
 	defer txn.Abort()
 
-	raw, err := txn.First("balance", "username", username)
-	if err != nil {
+	raw, err := txn.First("balance", "id", username)
+	if err != nil || raw == nil {
 		return &shared.Balance{Username: username, Balance: 0}
 	}
+
 	return raw.(*shared.Balance)
 }
 
@@ -37,11 +38,11 @@ func (db *Database) MakeTransfer(transfer shared.Transfer) error {
 		newBalanceTo += rawUserTo.(*shared.Balance).Balance
 	}
 
-	if err := txn.Insert("person", &shared.Balance{Username: transfer.From, Balance: newBalanceFrom}); err != nil {
+	if err := txn.Insert("balance", &shared.Balance{Username: transfer.From, Balance: newBalanceFrom}); err != nil {
 		txn.Abort()
 		return fmt.Errorf("couldn't update senders balance")
 	}
-	if err := txn.Insert("person", &shared.Balance{Username: transfer.To, Balance: newBalanceTo}); err != nil {
+	if err := txn.Insert("balance", &shared.Balance{Username: transfer.To, Balance: newBalanceTo}); err != nil {
 		txn.Abort()
 		return fmt.Errorf("couldn't update receivers balance")
 	}
@@ -70,6 +71,8 @@ func NewDatabase() (*Database, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	txn := db.Txn(true)
+	txn.Insert("balance", &shared.Balance{Username: "user1", Balance: 528.11})
+	txn.Commit()
 	return &Database{memdb: db}, nil
 }
