@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "github.com/JakubDaleki/transfer-app/shared-dependencies/grpc";
+
+package grpc;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc GetBalance (BalanceRequest) returns (BalanceReponse) {}
+  // rpc MakeTransfer (HelloRequest) returns (HelloReply) {}
+}
+
+// The request message containing the user's name.
+message BalanceRequest {
+  string username = 1;
+}
+
+// The response message containing the greetings
+message BalanceReponse {
+  string username = 1;
+  double balance = 2;
+}
