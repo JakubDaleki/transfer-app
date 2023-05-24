@@ -21,7 +21,7 @@ func main() {
 		fmt.Println(err)
 	}
 	grpcServer := grpc.NewServer()
-	s := &server.GreeterService{Db: db}
-	pb.RegisterGreeterServer(grpcServer, s)
+	s := &server.QueryService{Db: db}
+	pb.RegisterQueryServiceServer(grpcServer, s)
 	grpcServer.Serve(lis)
 }
