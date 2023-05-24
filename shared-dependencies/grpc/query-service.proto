@@ -4,9 +4,7 @@ option go_package = "github.com/JakubDaleki/transfer-app/shared-dependencies/grp
 
 package grpc;
 
-// The greeting service definition.
-service Greeter {
-  // Sends a greeting
+service QueryService {
   rpc GetBalance (BalanceRequest) returns (BalanceReponse) {}
   // rpc MakeTransfer (HelloRequest) returns (HelloReply) {}
 }
@@ -16,7 +14,7 @@ message BalanceRequest {
   string username = 1;
 }
 
-// The response message containing the greetings
+// The response message containing the balance
 message BalanceReponse {
   string username = 1;
   double balance = 2;

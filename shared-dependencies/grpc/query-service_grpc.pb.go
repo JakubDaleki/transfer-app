@@ -18,88 +18,86 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// GreeterClient is the client API for Greeter service.
+// QueryServiceClient is the client API for QueryService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type GreeterClient interface {
-	// Sends a greeting
+type QueryServiceClient interface {
 	GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceReponse, error)
 }
 
-type greeterClient struct {
+type queryServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGreeterClient(cc grpc.ClientConnInterface) GreeterClient {
-	return &greeterClient{cc}
+func NewQueryServiceClient(cc grpc.ClientConnInterface) QueryServiceClient {
+	return &queryServiceClient{cc}
 }
 
-func (c *greeterClient) GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceReponse, error) {
+func (c *queryServiceClient) GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceReponse, error) {
 	out := new(BalanceReponse)
-	err := c.cc.Invoke(ctx, "/grpc.Greeter/GetBalance", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/grpc.QueryService/GetBalance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// GreeterServer is the server API for Greeter service.
-// All implementations must embed UnimplementedGreeterServer
+// QueryServiceServer is the server API for QueryService service.
+// All implementations must embed UnimplementedQueryServiceServer
 // for forward compatibility
-type GreeterServer interface {
-	// Sends a greeting
+type QueryServiceServer interface {
 	GetBalance(context.Context, *BalanceRequest) (*BalanceReponse, error)
-	mustEmbedUnimplementedGreeterServer()
+	mustEmbedUnimplementedQueryServiceServer()
 }
 
-// UnimplementedGreeterServer must be embedded to have forward compatible implementations.
-type UnimplementedGreeterServer struct {
+// UnimplementedQueryServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedQueryServiceServer struct {
 }
 
-func (UnimplementedGreeterServer) GetBalance(context.Context, *BalanceRequest) (*BalanceReponse, error) {
+func (UnimplementedQueryServiceServer) GetBalance(context.Context, *BalanceRequest) (*BalanceReponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBalance not implemented")
 }
-func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
+func (UnimplementedQueryServiceServer) mustEmbedUnimplementedQueryServiceServer() {}
 
-// UnsafeGreeterServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GreeterServer will
+// UnsafeQueryServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to QueryServiceServer will
 // result in compilation errors.
-type UnsafeGreeterServer interface {
-	mustEmbedUnimplementedGreeterServer()
+type UnsafeQueryServiceServer interface {
+	mustEmbedUnimplementedQueryServiceServer()
 }
 
-func RegisterGreeterServer(s grpc.ServiceRegistrar, srv GreeterServer) {
-	s.RegisterService(&Greeter_ServiceDesc, srv)
+func RegisterQueryServiceServer(s grpc.ServiceRegistrar, srv QueryServiceServer) {
+	s.RegisterService(&QueryService_ServiceDesc, srv)
 }
 
-func _Greeter_GetBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _QueryService_GetBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BalanceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GreeterServer).GetBalance(ctx, in)
+		return srv.(QueryServiceServer).GetBalance(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.Greeter/GetBalance",
+		FullMethod: "/grpc.QueryService/GetBalance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreeterServer).GetBalance(ctx, req.(*BalanceRequest))
+		return srv.(QueryServiceServer).GetBalance(ctx, req.(*BalanceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
+// QueryService_ServiceDesc is the grpc.ServiceDesc for QueryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Greeter_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpc.Greeter",
-	HandlerType: (*GreeterServer)(nil),
+var QueryService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "grpc.QueryService",
+	HandlerType: (*QueryServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetBalance",
-			Handler:    _Greeter_GetBalance_Handler,
+			Handler:    _QueryService_GetBalance_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
