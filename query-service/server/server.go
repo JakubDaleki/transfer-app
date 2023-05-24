@@ -20,5 +20,5 @@ func (s *QueryService) GetBalance(ctx context.Context, req *pb.BalanceRequest) (
 
 func (s *QueryService) MakeTransfer(ctx context.Context, req *pb.TransferRequest) (*pb.TransferResponse, error) {
 	err := s.Db.MakeTransfer(shared.Transfer{From: req.From, To: req.To, Amount: req.Amount})
-	return nil, err
+	return &pb.TransferResponse{}, err
 }

@@ -29,7 +29,7 @@ func transferProcessing(client pb.QueryServiceClient) {
 		json.Unmarshal(m.Value, transfer)
 		_, err = client.MakeTransfer(context.Background(), &pb.TransferRequest{From: transfer.From, To: transfer.To, Amount: transfer.Amount})
 		if err != nil {
-			fmt.Printf("Failed to transfer %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)
+			fmt.Printf("Failed to transfer %v from %v to %v\n. Reason: %v", transfer.Amount, transfer.From, transfer.To, err)
 			continue
 		} else {
 			fmt.Printf("transfered %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)

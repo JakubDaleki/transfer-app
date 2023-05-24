@@ -25,16 +25,16 @@ func (db *Database) GetBalance(username string) *shared.Balance {
 
 func (db *Database) MakeTransfer(transfer shared.Transfer) error {
 	txn := db.memdb.Txn(true)
-	rawUserFrom, err := txn.First("balance", "username", transfer.From)
-	if err == memdb.ErrNotFound {
+	rawUserFrom, _ := txn.First("balance", "id", transfer.From)
+	if rawUserFrom == nil {
 		txn.Abort()
 		return fmt.Errorf("not enough funds")
 	}
 	newBalanceFrom := rawUserFrom.(*shared.Balance).Balance - transfer.Amount
 
-	rawUserTo, err := txn.First("balance", "username", transfer.To)
+	rawUserTo, _ := txn.First("balance", "id", transfer.To)
 	newBalanceTo := transfer.Amount
-	if err == memdb.ErrNotFound {
+	if rawUserTo != nil {
 		newBalanceTo += rawUserTo.(*shared.Balance).Balance
 	}
 
