@@ -14,7 +14,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func BalanceHandler(w http.ResponseWriter, r *http.Request, client pb.GreeterClient) {
+func BalanceHandler(w http.ResponseWriter, r *http.Request, client pb.QueryServiceClient) {
 	username := r.Context().Value("username").(string)
 	response, _ := client.GetBalance(context.Background(), &pb.BalanceRequest{Username: username})
 	json.NewEncoder(w).Encode(&shared.Balance{Username: username, Balance: response.Balance})

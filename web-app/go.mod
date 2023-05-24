@@ -3,7 +3,7 @@ module github.com/JakubDaleki/transfer-app/webapp
 go 1.19
 
 require (
-	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230522200923-e901a46839c7
+	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230524111900-50747bd41bc8
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/google/uuid v1.3.0
@@ -24,6 +24,6 @@ require (
 	golang.org/x/sync v0.2.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
-	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4 // indirect
+	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 )

@@ -58,3 +58,6 @@ services:
 
   command-handler:
     build: command-handler
+    
+  queryservice:
+    build: query-service

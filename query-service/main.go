@@ -16,7 +16,7 @@ func main() {
 		panic(err)
 	}
 
-	lis, err := net.Listen("tcp", "localhost:8888")
+	lis, err := net.Listen("tcp", ":8888")
 	if err != nil {
 		fmt.Println(err)
 	}

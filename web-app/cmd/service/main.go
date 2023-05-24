@@ -33,13 +33,13 @@ func main() {
 		Balancer: &kafka.Hash{},
 	}
 
-	conn, err := grpc.Dial("localhost:8888", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("queryservice:8888", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
 	defer conn.Close()
 
-	client := pb.NewGreeterClient(conn)
+	client := pb.NewQueryServiceClient(conn)
 
 	s := &http.Server{
 		Addr:    ":8000",

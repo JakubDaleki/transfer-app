@@ -11,7 +11,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func New(connector *db.Connector, kafkaW *kafka.Writer, client pb.GreeterClient) *chi.Mux {
+func New(connector *db.Connector, kafkaW *kafka.Writer, client pb.QueryServiceClient) *chi.Mux {
 	r := chi.NewRouter()
 
 	DIAuthHandler := func(w http.ResponseWriter, r *http.Request) { handlers.AuthHandler(w, r, connector) }

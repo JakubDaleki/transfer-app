@@ -7,18 +7,13 @@ import (
 	"log"
 
 	"github.com/JakubDaleki/transfer-app/shared-dependencies"
-	"github.com/jackc/pgx/v5/pgxpool"
+	pb "github.com/JakubDaleki/transfer-app/shared-dependencies/grpc"
 	"github.com/segmentio/kafka-go"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
-func updateBalance(pool *pgxpool.Pool, username string, amount int) error {
-	tx, _ := pool.Begin(context.Background())
-	tx.Exec(context.Background(), "update balance set balance=balance+$1 where username=$2", amount, username)
-	err := tx.Commit(context.Background())
-	return err
-}
-
-func transferProcessing(pool *pgxpool.Pool) {
+func transferProcessing(client pb.QueryServiceClient) {
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{"broker:29092"},
 		GroupID: "transfer-processors-group",
@@ -32,14 +27,14 @@ func transferProcessing(pool *pgxpool.Pool) {
 		}
 		transfer := new(shared.Transfer)
 		json.Unmarshal(m.Value, transfer)
-		err = updateBalance(pool, transfer.From, -transfer.Amount)
+		_, err = client.MakeTransfer(context.Background(), &pb.TransferRequest{From: transfer.From, To: transfer.To, Amount: transfer.Amount})
 		if err != nil {
-			fmt.Printf("Failed transfer of %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)
+			fmt.Printf("Failed to transfer %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)
 			continue
+		} else {
+			fmt.Printf("transfered %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)
 		}
 
-		err = updateBalance(pool, transfer.To, transfer.Amount)
-		fmt.Printf("transfered %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)
 	}
 
 	if err := r.Close(); err != nil {
@@ -48,10 +43,12 @@ func transferProcessing(pool *pgxpool.Pool) {
 }
 
 func main() {
-	url := "postgres://postgres:password123@db:5432/postgres"
-	pool, err := pgxpool.New(context.Background(), url)
+	conn, err := grpc.Dial("queryservice:8888", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		return
+		log.Fatalf("fail to dial: %v", err)
 	}
-	transferProcessing(pool)
+	defer conn.Close()
+
+	client := pb.NewQueryServiceClient(conn)
+	transferProcessing(client)
 }
