@@ -1,5 +1,5 @@
 ## Introduction
-The purpose of this application is to build a system that could be used for efficient money transfers (something like bank platform). The main goal of this project is to learn golang and check how convinient the language is in developing microservices with popular dependencies like kafka or postgressql.
+The purpose of this application is to build a system that could be used for efficient money transfers (something like a bank platform). The main goal of this project is to learn golang and check how convinient the language is in developing microservices with popular dependencies like kafka or postgressql.
 
 ## Architecture overview
 
