@@ -18,7 +18,7 @@ func (s *QueryService) GetBalance(ctx context.Context, req *pb.BalanceRequest) (
 	return &pb.BalanceReponse{Username: b.Username, Balance: b.Balance}, nil
 }
 
-func (s *QueryService) MakeTransfer(ctx context.Context, req *pb.TransferRequest) (*pb.TransferResponse, error) {
-	err := s.Db.MakeTransfer(shared.Transfer{From: req.From, To: req.To, Amount: req.Amount})
-	return &pb.TransferResponse{}, err
+func (s *QueryService) UpdateBalance(ctx context.Context, req *pb.UpdateBalanceRequest) (*pb.UpdateBalanceResponse, error) {
+	err := s.Db.UpdateBalance(shared.Balance{Username: req.User, Balance: req.Amount})
+	return &pb.UpdateBalanceResponse{}, err
 }

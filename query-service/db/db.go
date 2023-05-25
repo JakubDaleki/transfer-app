@@ -23,28 +23,23 @@ func (db *Database) GetBalance(username string) *shared.Balance {
 	return raw.(*shared.Balance)
 }
 
-func (db *Database) MakeTransfer(transfer shared.Transfer) error {
+func (db *Database) UpdateBalance(balanceChange shared.Balance) error {
 	txn := db.memdb.Txn(true)
-	rawUserFrom, _ := txn.First("balance", "id", transfer.From)
-	if rawUserFrom == nil {
+	balance, _ := txn.First("balance", "id", balanceChange.Username)
+	var newBalance float64
+	if balance == nil {
+		newBalance = balanceChange.Balance
+	} else {
+		newBalance = balance.(*shared.Balance).Balance + balanceChange.Balance
+	}
+	if newBalance < 0 {
 		txn.Abort()
 		return fmt.Errorf("not enough funds")
 	}
-	newBalanceFrom := rawUserFrom.(*shared.Balance).Balance - transfer.Amount
 
-	rawUserTo, _ := txn.First("balance", "id", transfer.To)
-	newBalanceTo := transfer.Amount
-	if rawUserTo != nil {
-		newBalanceTo += rawUserTo.(*shared.Balance).Balance
-	}
-
-	if err := txn.Insert("balance", &shared.Balance{Username: transfer.From, Balance: newBalanceFrom}); err != nil {
+	if err := txn.Insert("balance", &shared.Balance{Username: balanceChange.Username, Balance: newBalance}); err != nil {
 		txn.Abort()
-		return fmt.Errorf("couldn't update senders balance")
-	}
-	if err := txn.Insert("balance", &shared.Balance{Username: transfer.To, Balance: newBalanceTo}); err != nil {
-		txn.Abort()
-		return fmt.Errorf("couldn't update receivers balance")
+		return fmt.Errorf(fmt.Sprintf("couldn't update %s balance", balanceChange.Username))
 	}
 
 	txn.Commit()

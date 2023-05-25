@@ -14,16 +14,6 @@ type Connector struct {
 	pgConn *pgxpool.Pool
 }
 
-func (conn *Connector) GetBalance(username string) int {
-	var balance int
-	err := conn.pgConn.QueryRow(context.Background(), "select balance from balance where username=$1", username).Scan(&balance)
-	if err != nil {
-		return 0
-	}
-
-	return balance
-}
-
 func (conn *Connector) GetPassword(username string) string {
 	var password string
 	err := conn.pgConn.QueryRow(context.Background(), "select password from users where username=$1", username).Scan(&password)
@@ -36,10 +26,6 @@ func (conn *Connector) GetPassword(username string) string {
 
 func (conn *Connector) AddNewUser(username, password string) error {
 	_, err := conn.pgConn.Exec(context.Background(), "insert into users(id, username, password) values(gen_random_uuid(), $1, $2)", username, password)
-	if err != nil {
-		return err
-	}
-	_, err = conn.pgConn.Exec(context.Background(), "insert into balance(username, balance) values($1, $2)", username, 100)
 	if err != nil {
 		return err
 	}

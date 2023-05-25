@@ -13,32 +13,41 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func transferProcessing(client pb.QueryServiceClient) {
-	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"broker:29092"},
-		GroupID: "transfer-processors-group",
-		Topic:   "transfers",
-	})
-
+func transferProcessing(client pb.QueryServiceClient, kafkaR *kafka.Reader, kafkaW *kafka.Writer) {
 	for {
-		m, err := r.ReadMessage(context.Background())
+		m, err := kafkaR.ReadMessage(context.Background())
 		if err != nil {
 			break
 		}
+		mKey := string(m.Key)
 		transfer := new(shared.Transfer)
 		json.Unmarshal(m.Value, transfer)
-		_, err = client.MakeTransfer(context.Background(), &pb.TransferRequest{From: transfer.From, To: transfer.To, Amount: transfer.Amount})
-		if err != nil {
-			fmt.Printf("Failed to transfer %v from %v to %v\n. Reason: %v", transfer.Amount, transfer.From, transfer.To, err)
-			continue
+		if mKey == transfer.From {
+			// we are performing subtraction
+			_, err = client.UpdateBalance(context.Background(), &pb.UpdateBalanceRequest{User: transfer.From, Amount: -transfer.Amount})
+			if err != nil {
+				fmt.Printf("Failed to decrease balance of %v by %v. Reason: %v\n", transfer.From, transfer.Amount, err)
+			} else {
+				fmt.Printf("Subtracted %v from %v's account.\n", transfer.Amount, transfer.From)
+			}
+			// we need to send a copy to increase other user balance and store it on their partition
+			_ = kafkaW.WriteMessages(context.Background(), kafka.Message{
+				Value: m.Value,
+				Key:   []byte(transfer.To),
+			})
+
 		} else {
-			fmt.Printf("transfered %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)
+			// we are performing addition
+			_, err = client.UpdateBalance(context.Background(), &pb.UpdateBalanceRequest{User: transfer.To, Amount: transfer.Amount})
+			if err != nil {
+				fmt.Printf("Failed to increase balance of %v by %v. Reason: %v\n", transfer.To, transfer.Amount, err)
+			} else {
+				fmt.Printf("transfered %v from %v to %v\n", transfer.Amount, transfer.From, transfer.To)
+			}
 		}
 
-	}
+		// kafkaR.CommitMessages(context.Background(), m)
 
-	if err := r.Close(); err != nil {
-		log.Fatal("failed to close reader:", err)
 	}
 }
 
@@ -49,6 +58,22 @@ func main() {
 	}
 	defer conn.Close()
 
+	kafkaR := kafka.NewReader(kafka.ReaderConfig{
+		Brokers: []string{"broker:29092"},
+		GroupID: "transfer-processors-group",
+		Topic:   "transfers",
+	})
+
+	defer kafkaR.Close()
+
+	kafkaW := &kafka.Writer{
+		Addr:     kafka.TCP("broker:29092"),
+		Topic:    "transfers",
+		Balancer: &kafka.Hash{},
+	}
+
+	defer kafkaW.Close()
+
 	client := pb.NewQueryServiceClient(conn)
-	transferProcessing(client)
+	transferProcessing(client, kafkaR, kafkaW)
 }
