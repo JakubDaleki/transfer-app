@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QueryServiceClient interface {
 	GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceReponse, error)
-	MakeTransfer(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error)
+	MakeTransfer(ctx context.Context, in *UpdateBalanceRequest, opts ...grpc.CallOption) (*UpdateBalanceResponse, error)
 }
 
 type queryServiceClient struct {
@@ -43,8 +43,8 @@ func (c *queryServiceClient) GetBalance(ctx context.Context, in *BalanceRequest,
 	return out, nil
 }
 
-func (c *queryServiceClient) MakeTransfer(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error) {
-	out := new(TransferResponse)
+func (c *queryServiceClient) MakeTransfer(ctx context.Context, in *UpdateBalanceRequest, opts ...grpc.CallOption) (*UpdateBalanceResponse, error) {
+	out := new(UpdateBalanceResponse)
 	err := c.cc.Invoke(ctx, "/grpc.QueryService/MakeTransfer", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (c *queryServiceClient) MakeTransfer(ctx context.Context, in *TransferReque
 // for forward compatibility
 type QueryServiceServer interface {
 	GetBalance(context.Context, *BalanceRequest) (*BalanceReponse, error)
-	MakeTransfer(context.Context, *TransferRequest) (*TransferResponse, error)
+	MakeTransfer(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error)
 	mustEmbedUnimplementedQueryServiceServer()
 }
 
@@ -68,7 +68,7 @@ type UnimplementedQueryServiceServer struct {
 func (UnimplementedQueryServiceServer) GetBalance(context.Context, *BalanceRequest) (*BalanceReponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBalance not implemented")
 }
-func (UnimplementedQueryServiceServer) MakeTransfer(context.Context, *TransferRequest) (*TransferResponse, error) {
+func (UnimplementedQueryServiceServer) MakeTransfer(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MakeTransfer not implemented")
 }
 func (UnimplementedQueryServiceServer) mustEmbedUnimplementedQueryServiceServer() {}
@@ -103,7 +103,7 @@ func _QueryService_GetBalance_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _QueryService_MakeTransfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TransferRequest)
+	in := new(UpdateBalanceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func _QueryService_MakeTransfer_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: "/grpc.QueryService/MakeTransfer",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServiceServer).MakeTransfer(ctx, req.(*TransferRequest))
+		return srv.(QueryServiceServer).MakeTransfer(ctx, req.(*UpdateBalanceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

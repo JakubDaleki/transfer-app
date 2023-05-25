@@ -7,7 +7,7 @@ package grpc;
 
 service QueryService {
   rpc GetBalance (BalanceRequest) returns (BalanceReponse) {}
-  rpc MakeTransfer (TransferRequest) returns (TransferResponse) {}
+  rpc MakeTransfer (UpdateBalanceRequest) returns (UpdateBalanceResponse) {}
 }
 
 message BalanceRequest {
@@ -19,12 +19,11 @@ message BalanceReponse {
   double balance = 2;
 }
 
-message TransferRequest {
-  string from = 1;
-  string to = 2;
-  double amount = 3;
+message UpdateBalanceRequest {
+  string user = 1;
+  double amount = 2;
 }
 
-message TransferResponse {
+message UpdateBalanceResponse {
 }
 
