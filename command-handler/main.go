@@ -29,12 +29,12 @@ func transferProcessing(client pb.QueryServiceClient, kafkaR *kafka.Reader, kafk
 				fmt.Printf("Failed to decrease balance of %v by %v. Reason: %v\n", transfer.From, transfer.Amount, err)
 			} else {
 				fmt.Printf("Subtracted %v from %v's account.\n", transfer.Amount, transfer.From)
+				// we need to send a copy to increase other user balance and store it on their partition
+				_ = kafkaW.WriteMessages(context.Background(), kafka.Message{
+					Value: m.Value,
+					Key:   []byte(transfer.To),
+				})
 			}
-			// we need to send a copy to increase other user balance and store it on their partition
-			_ = kafkaW.WriteMessages(context.Background(), kafka.Message{
-				Value: m.Value,
-				Key:   []byte(transfer.To),
-			})
 
 		} else {
 			// we are performing addition
