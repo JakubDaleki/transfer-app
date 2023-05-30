@@ -15,8 +15,9 @@ import (
 
 func transferProcessing(client pb.QueryServiceClient, kafkaR *kafka.Reader, kafkaW *kafka.Writer) {
 	for {
-		m, err := kafkaR.ReadMessage(context.Background())
+		m, err := kafkaR.FetchMessage(context.Background())
 		if err != nil {
+			fmt.Println(err)
 			break
 		}
 		mKey := string(m.Key)
@@ -46,7 +47,7 @@ func transferProcessing(client pb.QueryServiceClient, kafkaR *kafka.Reader, kafk
 			}
 		}
 
-		// kafkaR.CommitMessages(context.Background(), m)
+		kafkaR.CommitMessages(context.Background(), m)
 
 	}
 }
