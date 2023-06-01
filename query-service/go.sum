@@ -1,5 +1,7 @@
 github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230525203253-1a16f28d94a0 h1:Pf0BL/osrneCc7MNbEQGpzhHoJh702ibAc9gz8fvr+E=
 github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230525203253-1a16f28d94a0/go.mod h1:8X4vrLhm+NOx5bWrLEduuYLIhQ5j8mtOPVSE8xDSp64=
+github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230601125146-02d4e0ba0a7d h1:4+6tpqC0u5qA1gppAVFRD4wl4RqhgINka00Pkfiq5Sg=
+github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230601125146-02d4e0ba0a7d/go.mod h1:8X4vrLhm+NOx5bWrLEduuYLIhQ5j8mtOPVSE8xDSp64=
 github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=
 github.com/golang/protobuf v1.5.3 h1:KhyjKVUg7Usr/dYsdSqoFveMYd5ko72D+zANwlG1mmg=
 github.com/golang/protobuf v1.5.3/go.mod h1:XVQd3VNwM+JqD3oG2Ue2ip4fOMUkwXdXDdiuN0vRsmY=

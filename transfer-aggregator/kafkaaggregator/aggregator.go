@@ -31,11 +31,11 @@ func NewAggregator() *Aggregator {
 
 }
 
-func (agg *Aggregator) ProcessAllPartitions() {
+func (agg *Aggregator) ProcessAllPartitions(ch chan map[string]float64) {
 	for _, partition := range agg.Partitions {
-		agg.ProcessPartition(partition.ID)
+		ch <- agg.ProcessPartition(partition.ID)
 	}
-
+	close(ch)
 }
 
 func (agg *Aggregator) ProcessPartition(partitionId int) map[string]float64 {

@@ -61,3 +61,6 @@ services:
     
   queryservice:
     build: query-service
+
+  transfer-aggregator:
+    build: transfer-aggregator

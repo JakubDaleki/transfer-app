@@ -22,3 +22,12 @@ func (s *QueryService) UpdateBalance(ctx context.Context, req *pb.UpdateBalanceR
 	err := s.Db.UpdateBalance(shared.Balance{Username: req.User, Balance: req.Amount})
 	return &pb.UpdateBalanceResponse{}, err
 }
+
+func (s *QueryService) RecreateBalances(ctx context.Context, req *pb.BalancesMapRequest) (*pb.UpdateBalanceResponse, error) {
+	var err error
+	balances := req.BatchedBalances
+	for username, balance := range balances {
+		s.Db.UpdateBalance(shared.Balance{Username: username, Balance: balance})
+	}
+	return &pb.UpdateBalanceResponse{}, err
+}

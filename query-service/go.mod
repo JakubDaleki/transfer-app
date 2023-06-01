@@ -3,7 +3,7 @@ module github.com/JakubDaleki/transfer-app/query-service
 go 1.19
 
 require (
-	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230525203253-1a16f28d94a0
+	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230601125146-02d4e0ba0a7d
 	github.com/hashicorp/go-memdb v1.3.4
 	google.golang.org/grpc v1.55.0
 )
