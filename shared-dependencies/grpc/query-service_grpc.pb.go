@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type QueryServiceClient interface {
 	GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceReponse, error)
 	UpdateBalance(ctx context.Context, in *UpdateBalanceRequest, opts ...grpc.CallOption) (*UpdateBalanceResponse, error)
+	RecreateBalances(ctx context.Context, in *BalancesMapRequest, opts ...grpc.CallOption) (*UpdateBalanceResponse, error)
 }
 
 type queryServiceClient struct {
@@ -52,12 +53,22 @@ func (c *queryServiceClient) UpdateBalance(ctx context.Context, in *UpdateBalanc
 	return out, nil
 }
 
+func (c *queryServiceClient) RecreateBalances(ctx context.Context, in *BalancesMapRequest, opts ...grpc.CallOption) (*UpdateBalanceResponse, error) {
+	out := new(UpdateBalanceResponse)
+	err := c.cc.Invoke(ctx, "/grpc.QueryService/RecreateBalances", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServiceServer is the server API for QueryService service.
 // All implementations must embed UnimplementedQueryServiceServer
 // for forward compatibility
 type QueryServiceServer interface {
 	GetBalance(context.Context, *BalanceRequest) (*BalanceReponse, error)
 	UpdateBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error)
+	RecreateBalances(context.Context, *BalancesMapRequest) (*UpdateBalanceResponse, error)
 	mustEmbedUnimplementedQueryServiceServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedQueryServiceServer) GetBalance(context.Context, *BalanceReque
 }
 func (UnimplementedQueryServiceServer) UpdateBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateBalance not implemented")
+}
+func (UnimplementedQueryServiceServer) RecreateBalances(context.Context, *BalancesMapRequest) (*UpdateBalanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RecreateBalances not implemented")
 }
 func (UnimplementedQueryServiceServer) mustEmbedUnimplementedQueryServiceServer() {}
 
@@ -120,6 +134,24 @@ func _QueryService_UpdateBalance_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _QueryService_RecreateBalances_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BalancesMapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServiceServer).RecreateBalances(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.QueryService/RecreateBalances",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServiceServer).RecreateBalances(ctx, req.(*BalancesMapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // QueryService_ServiceDesc is the grpc.ServiceDesc for QueryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var QueryService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateBalance",
 			Handler:    _QueryService_UpdateBalance_Handler,
+		},
+		{
+			MethodName: "RecreateBalances",
+			Handler:    _QueryService_RecreateBalances_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
