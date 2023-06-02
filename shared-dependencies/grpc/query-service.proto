@@ -8,6 +8,7 @@ package grpc;
 service QueryService {
   rpc GetBalance (BalanceRequest) returns (BalanceReponse) {}
   rpc UpdateBalance (UpdateBalanceRequest) returns (UpdateBalanceResponse) {}
+  rpc RecreateBalances (BalancesMapRequest) returns (UpdateBalanceResponse) {}
 }
 
 message BalanceRequest {
@@ -27,3 +28,6 @@ message UpdateBalanceRequest {
 message UpdateBalanceResponse {
 }
 
+message BalancesMapRequest {
+  map<string, double> batchedBalances = 1;
+}

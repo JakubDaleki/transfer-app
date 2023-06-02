@@ -3,7 +3,7 @@ module github.com/JakubDaleki/transfer-app/webapp
 go 1.19
 
 require (
-	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230524111900-50747bd41bc8
+	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230601135447-5fa90f86134d
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/google/uuid v1.3.0

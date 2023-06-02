@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	pb "github.com/JakubDaleki/transfer-app/shared-dependencies/grpc"
+	kafkautils "github.com/JakubDaleki/transfer-app/shared-dependencies/kafka"
 	"github.com/JakubDaleki/transfer-app/webapp/api/router"
-	"github.com/JakubDaleki/transfer-app/webapp/utils"
 	"github.com/JakubDaleki/transfer-app/webapp/utils/db"
 	"github.com/segmentio/kafka-go"
 	"google.golang.org/grpc"
@@ -15,7 +15,7 @@ import (
 
 func main() {
 	// wait for kafka service to be up
-	err := utils.WaitForKafka()
+	err := kafkautils.WaitForKafka()
 	if err != nil {
 		panic(err)
 	}
