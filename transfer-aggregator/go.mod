@@ -3,7 +3,7 @@ module github.com/JakubDaleki/transfer-app/transfer-aggregator
 go 1.20
 
 require (
-	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230601125146-02d4e0ba0a7d
+	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230601135447-5fa90f86134d
 	github.com/segmentio/kafka-go v0.4.40
 	google.golang.org/grpc v1.55.0
 )

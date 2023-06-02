@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	kafkautils "github.com/JakubDaleki/transfer-app/shared-dependencies/kafka"
 	"github.com/JakubDaleki/transfer-app/transfer-aggregator/kafkaaggregator"
 
 	pb "github.com/JakubDaleki/transfer-app/shared-dependencies/grpc"
@@ -28,8 +29,15 @@ func main() {
 	client := pb.NewQueryServiceClient(conn)
 
 	ch := make(chan map[string]float64)
-	agg := new(kafkaaggregator.Aggregator)
-	agg.ProcessAllPartitions(ch)
+	err = kafkautils.WaitForKafka()
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	agg := kafkaaggregator.NewAggregator()
+
+	go agg.ProcessAllPartitions(ch)
 
 	for batchedBalance := range ch {
 		_, err = client.RecreateBalances(context.Background(), &pb.BalancesMapRequest{BatchedBalances: batchedBalance})
@@ -37,6 +45,4 @@ func main() {
 			fmt.Println(err.Error())
 		}
 	}
-
-	fmt.Sprintln("Successfully processed data from ", len(agg.Partitions), " partitions")
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/JakubDaleki/transfer-app/shared-dependencies"
 	pb "github.com/JakubDaleki/transfer-app/shared-dependencies/grpc"
+	kafkautils "github.com/JakubDaleki/transfer-app/shared-dependencies/kafka"
 	"github.com/segmentio/kafka-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -58,6 +59,12 @@ func main() {
 		log.Fatalf("fail to dial: %v", err)
 	}
 	defer conn.Close()
+
+	err = kafkautils.WaitForKafka()
+
+	if err != nil {
+		panic(err.Error())
+	}
 
 	kafkaR := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{"broker:29092"},
