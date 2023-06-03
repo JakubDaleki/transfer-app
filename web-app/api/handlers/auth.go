@@ -58,6 +58,9 @@ func AuthHandler(w http.ResponseWriter, r *http.Request, connector *db.Connector
 func RegHandler(w http.ResponseWriter, r *http.Request, connector *db.Connector) {
 	cred := new(auth.Credentials)
 	json.NewDecoder(r.Body).Decode(cred)
-	connector.AddNewUser(cred.Username, cred.Password)
+	err := connector.AddNewUser(cred.Username, cred.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusConflict)
+	}
 	w.WriteHeader(http.StatusCreated)
 }
