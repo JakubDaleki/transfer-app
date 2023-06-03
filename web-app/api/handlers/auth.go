@@ -24,7 +24,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request, connector *db.Connector
 
 	if expectedPassword != creds.Password {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(fmt.Sprintf("{\"error\": \"Wrong password or user does not exist.\"}")))
+		w.Write([]byte("{\"error\": \"Wrong password or user does not exist.\"}"))
 		return
 	}
 
