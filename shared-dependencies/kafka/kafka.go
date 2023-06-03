@@ -19,3 +19,8 @@ func WaitForKafka() error {
 
 	return fmt.Errorf("couldn't connect to kafka")
 }
+
+func GetBootstrapServers() []string {
+	// not all brokers have to be specified, only few
+	return []string{"broker:29092", "broker2:29092", "broker3:29092"}
+}
