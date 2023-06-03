@@ -30,12 +30,13 @@ func main() {
 
 	ch := make(chan map[string]float64)
 	err = kafkautils.WaitForKafka()
+	brokers := kafkautils.GetBootstrapServers()
 
 	if err != nil {
 		panic(err.Error())
 	}
 
-	agg := kafkaaggregator.NewAggregator()
+	agg := kafkaaggregator.NewAggregator(brokers)
 
 	go agg.ProcessAllPartitions(ch)
 

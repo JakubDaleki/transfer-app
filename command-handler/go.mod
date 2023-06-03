@@ -3,7 +3,7 @@ module github.com/JakubDaleki/transfer-app/command-handler
 go 1.19
 
 require (
-	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230602112632-a38962981394
+	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230603170121-20f9a4790c56
 	github.com/segmentio/kafka-go v0.4.40
 	google.golang.org/grpc v1.55.0
 )

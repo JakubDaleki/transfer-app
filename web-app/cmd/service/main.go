@@ -28,7 +28,7 @@ func main() {
 
 	// use hash balancer to ensure partition and ordering per user
 	kafkaW := &kafka.Writer{
-		Addr:     kafka.TCP("broker:29092"),
+		Addr:     kafka.TCP(kafkautils.GetBootstrapServers()...),
 		Topic:    "transfers",
 		Balancer: &kafka.Hash{},
 	}

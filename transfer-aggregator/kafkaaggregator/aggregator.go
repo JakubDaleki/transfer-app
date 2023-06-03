@@ -4,18 +4,21 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"time"
 
 	"github.com/JakubDaleki/transfer-app/shared-dependencies"
 	"github.com/segmentio/kafka-go"
 )
 
 type Aggregator struct {
+	brokers    []string
 	partitions []kafka.PartitionOffsets
 }
 
-func NewAggregator() *Aggregator {
+func NewAggregator(brokers []string) *Aggregator {
 	agg := new(Aggregator)
-	addr := "broker:29092"
+	agg.brokers = brokers
+	addr := brokers[0]
 	topic := "transfers"
 	conn, err := kafka.Dial("tcp", addr)
 	if err != nil {
@@ -27,7 +30,11 @@ func NewAggregator() *Aggregator {
 		panic(err.Error())
 	}
 
-	client := kafka.Client{Addr: kafka.TCP(addr)}
+	client := kafka.Client{
+		Addr:    kafka.TCP(brokers...),
+		Timeout: 10 * time.Second,
+	}
+
 	partitionIds := []kafka.OffsetRequest{}
 	for _, partition := range partitions {
 		partitionIds = append(partitionIds, kafka.OffsetRequest{Partition: partition.ID, Timestamp: kafka.LastOffset})
@@ -57,7 +64,7 @@ func (agg *Aggregator) ProcessAllPartitions(ch chan map[string]float64) {
 func (agg *Aggregator) ProcessPartition(partitionId int, offset int64) map[string]float64 {
 	aggregations := make(map[string]float64)
 	kafkaR := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:   []string{"broker:29092"},
+		Brokers:   agg.brokers,
 		Topic:     "transfers",
 		Partition: partitionId,
 	})

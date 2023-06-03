@@ -66,8 +66,9 @@ func main() {
 		panic(err.Error())
 	}
 
+	brokers := kafkautils.GetBootstrapServers()
 	kafkaR := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"broker:29092"},
+		Brokers: brokers,
 		GroupID: "transfer-processors-group",
 		Topic:   "transfers",
 	})
@@ -75,7 +76,7 @@ func main() {
 	defer kafkaR.Close()
 
 	kafkaW := &kafka.Writer{
-		Addr:     kafka.TCP("broker:29092"),
+		Addr:     kafka.TCP(brokers...),
 		Topic:    "transfers",
 		Balancer: &kafka.Hash{},
 	}
