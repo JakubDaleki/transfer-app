@@ -1,7 +1,5 @@
-github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230525203253-1a16f28d94a0 h1:Pf0BL/osrneCc7MNbEQGpzhHoJh702ibAc9gz8fvr+E=
-github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230525203253-1a16f28d94a0/go.mod h1:8X4vrLhm+NOx5bWrLEduuYLIhQ5j8mtOPVSE8xDSp64=
-github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230601135447-5fa90f86134d h1:rfT7KiFfEiKX2FkSoDKLy4S32KJnoMCj/Xd1M4PhMcc=
-github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230601135447-5fa90f86134d/go.mod h1:pTaO+w2/LQp22H7XSrDtAcvEEa+Op5gmOvHPzqOv0Sk=
+github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230602112632-a38962981394 h1:A5lSuiIFMvooH4YBVLuBnRVyC76d8sBmLq7lblUPIiY=
+github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230602112632-a38962981394/go.mod h1:pTaO+w2/LQp22H7XSrDtAcvEEa+Op5gmOvHPzqOv0Sk=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -65,8 +63,8 @@ golang.org/x/tools v0.0.0-20191119224855-298f0cb1881e/go.mod h1:b+2E5dAYhXwXZwtn
 golang.org/x/tools v0.1.12/go.mod h1:hNGJHUnrk76NpqgfD5Aqm5Crs+Hm0VOH/i9J2+nxYbc=
 golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
-google.golang.org/genproto v0.0.0-20230525154841-bd750badd5c6 h1:62QuyPXKEkZpjZesyj5K5jABl6MnSnWl+vNuT5oz90E=
-google.golang.org/genproto v0.0.0-20230525154841-bd750badd5c6/go.mod h1:nKE/iIaLqn2bQwXBg8f1g2Ylh6r5MN5CmZvuzZCgsCU=
+google.golang.org/genproto/googleapis/rpc v0.0.0-20230530153820-e85fd2cbaebc h1:XSJ8Vk1SWuNr8S18z1NZSziL0CPIXLCCMDOEFtHBOFc=
+google.golang.org/genproto/googleapis/rpc v0.0.0-20230530153820-e85fd2cbaebc/go.mod h1:66JfowdXAEgad5O9NnYcsNPLCPZJD++2L9X0PCMODrA=
 google.golang.org/grpc v1.55.0 h1:3Oj82/tFSCeUrRTg/5E/7d/W5A1tj6Ky1ABAuZuv5ag=
 google.golang.org/grpc v1.55.0/go.mod h1:iYEXKGkEBhg1PjZQvoYEVPTDkHo1/bjTnfwTeGONTY8=
 google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp09yW+WbY/TyQbw=
