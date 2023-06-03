@@ -1,4 +1,4 @@
-package utils
+package kafka
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 )
 
 func WaitForKafka() error {
-	for trial := 0; trial < 3; trial++ {
+	for trial := 0; trial < 5; trial++ {
 		conn, err := kafka.Dial("tcp", "broker:29092")
 		if err == nil {
 			conn.Close()
