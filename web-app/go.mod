@@ -3,7 +3,7 @@ module github.com/JakubDaleki/transfer-app/webapp
 go 1.19
 
 require (
-	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230603170121-20f9a4790c56
+	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/google/uuid v1.3.0
@@ -27,3 +27,5 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230530153820-e85fd2cbaebc // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 )
+
+replace github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0 => ../shared-dependencies

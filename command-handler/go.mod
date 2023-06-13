@@ -3,7 +3,7 @@ module github.com/JakubDaleki/transfer-app/command-handler
 go 1.19
 
 require (
-	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0-20230603170121-20f9a4790c56
+	github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0
 	github.com/segmentio/kafka-go v0.4.40
 	google.golang.org/grpc v1.55.0
 )
@@ -20,3 +20,5 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230530153820-e85fd2cbaebc // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 )
+
+replace github.com/JakubDaleki/transfer-app/shared-dependencies v0.0.0 => ../shared-dependencies
