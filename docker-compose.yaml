@@ -74,21 +74,33 @@ services:
       - 8080:8080
 
   web:
-    build: web-app
+    build:
+      context: .
+      dockerfile: ./web-app/Dockerfile
     ports:
       - "8000:8000"
     depends_on:
       - broker
 
   command-handler1:
-    build: command-handler
+    build:
+      context: .
+      dockerfile: ./command-handler/Dockerfile
   command-handler2:
-    build: command-handler
+    build:
+      context: .
+      dockerfile: ./command-handler/Dockerfile
   command-handler3:
-    build: command-handler
+    build:
+      context: .
+      dockerfile: ./command-handler/Dockerfile
     
   queryservice:
-    build: query-service
+    build:
+      context: .
+      dockerfile: ./query-service/Dockerfile
 
   transfer-aggregator:
-    build: transfer-aggregator
+    build:
+      context: .
+      dockerfile: ./transfer-aggregator/Dockerfile
